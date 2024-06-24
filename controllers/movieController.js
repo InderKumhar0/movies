@@ -2,7 +2,7 @@ const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 const db = require("./../db");
 
-exports.createMovie = catchAsync(async (req, res) => {
+exports.createMovie = catchAsync(async (req, res, next) => {
   const { title, genre, release_year, actorIds, directorId } = req.body;
 
   if (!actorIds || !directorId)
@@ -31,7 +31,7 @@ exports.createMovie = catchAsync(async (req, res) => {
 });
 
 
-exports.updateMovie = catchAsync(async (req, res) => {
+exports.updateMovie = catchAsync(async (req, res, next) => {
   const { id } = req.params;
   const { title, genre, release_year, actorIds, directorId } = req.body;
 
@@ -115,7 +115,7 @@ exports.getMoviesBySpecificYear = catchAsync(async (req, res) => {
     res.json(movies);
 });
 
-exports.getActorsByDirector = catchAsync(async (req, res) => {
+exports.getActorsByDirector = catchAsync(async (req, res, next) => {
   const { directorId } = req.params;
 
   if (!directorId) {
@@ -139,12 +139,11 @@ exports.getActorsByDirector = catchAsync(async (req, res) => {
     res.json(actors);
 });
 
-exports.getAverageActorsByGenre = catchAsync(async (req, res) => {
+exports.getAverageActorsByGenre = catchAsync(async (req, res, next) => {
   const { genre } = req.params;
 
   if (!genre) {
-    return next(new AppError('Genre parameter is required', 400))
-    return res.status(400).json({ error: "Genre parameter is required" });
+    return next(new AppError('Please provide genre', 400))
   }
 
 

@@ -1,4 +1,5 @@
 const db = require("../db");
+const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 
 exports.createDirector = catchAsync(async (req, res) => {
@@ -17,18 +18,18 @@ exports.getAllDirectors = catchAsync(async (req, res) => {
   res.json(directors);
 });
 
-exports.getDirectorById = catchAsync(async (req, res) => {
+exports.getDirectorById = catchAsync(async (req, res, next) => {
   const { id } = req.params;
   const [directors] = await db.execute("SELECT * FROM directors WHERE id = ?", [
     id,
   ]);
   if (directors.length === 0) {
-    return next(new AppError("director not failed", 404));
+    return next(new AppError("director not found", 404));
   }
   res.json(directors[0]);
 });
 
-exports.updateDirector = catchAsync(async (req, res) => {
+exports.updateDirector = catchAsync(async (req, res, next) => {
   const { id } = req.params;
   const { name, birthdate } = req.body;
   const [result] = await db.execute(
@@ -36,12 +37,12 @@ exports.updateDirector = catchAsync(async (req, res) => {
     [name, new Date(birthdate), id]
   );
   if (result.affectedRows === 0) {
-    return next(new AppError("director not found failed", 404));
+    return next(new AppError("director not found", 404));
   }
   res.json({ message: "director updated" });
 });
 
-exports.deleteDirector = catchAsync(async (req, res) => {
+exports.deleteDirector = catchAsync(async (req, res, next) => {
   const { id } = req.params;
   const [result] = await db.execute("DELETE FROM directors WHERE id = ?", [id]);
   if (result.affectedRows === 0) {

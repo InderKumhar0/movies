@@ -8,7 +8,7 @@ router.get('/', authenticateApiKeyAndToken, directorController.getAllDirectors);
 router.get('/:id', authenticateApiKeyAndToken, directorController.getDirectorById);
 
 router.post('/', authenticateApiKeyAndToken, checkAdminRole, directorController.createDirector);
-router.put('/:id', authenticateApiKeyAndToken, checkAdminRole, directorController.updateDirector);
+router.patch('/:id', authenticateApiKeyAndToken, checkAdminRole, directorController.updateDirector);
 router.delete('/:id', authenticateApiKeyAndToken, checkAdminRole, directorController.deleteDirector);
 
 module.exports = router;
